@@ -1,16 +1,22 @@
 export {};
 
-Connector.playerSelector = '#indieshuffle_player';
+Connector.playerSelector = '#player';
 
 Connector.getArtist = () =>
-	Util.getTextFromSelectors('#player-current .artist')?.slice(0, -3);
+	document.querySelector('.player-info .track-artist')?.firstChild
+		?.textContent;
 
-Connector.trackSelector = '#player-current .title';
+Connector.trackSelector = '.player-info .track-title';
 
-Connector.trackArtSelector = '#player-current > div > a.ajaxlink.pink > img';
+Connector.trackArtSelector = '.player-artwork img';
 
-Connector.currentTimeSelector = '#player-current > .progress > .seek';
+Connector.currentTimeSelector = '.player-progress .current';
 
-Connector.durationSelector = '#player-current > .progress > .duration';
+Connector.durationSelector = '.player-progress .total';
 
-Connector.isPlaying = () => Util.hasElementClass('#playerPlaying', 'active');
+Connector.isPlaying = () => {
+	const canPause =
+		Util.getAttrFromSelectors('.play-pause', 'title', 'Play') == 'Pause';
+	const hasError = Util.getTextFromSelectors('.player-info .player-error');
+	return canPause && !hasError;
+};
